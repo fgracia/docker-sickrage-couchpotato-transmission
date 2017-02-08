@@ -1,0 +1,40 @@
+sickrage:
+  image: fgracia/sickrage
+  ports:
+   - "8081:8081"
+  volumes:
+   - /etc/localtime:/etc/localtime:ro
+   - /home/fgracia/Documents/Docker/sickrage-couchpotato-transmission/conf/sickrage:/data
+   - /tmp/downloads/sickrage:/downloads/sickrage
+   - /tmp/Series:/Series
+  links:
+    - transmission
+#  restart: always
+
+couchpotato:
+  image: fgracia/couchpotato
+  ports:
+   - "8082:5050"
+  volumes:
+   - /etc/localtime:/etc/localtime:ro
+   - /home/fgracia/Documents/Docker/sickrage-couchpotato-transmission/conf/couchpotato:/root/.couchpotato
+   - /tmp/downloads/couchpotato:/downloads/couchpotato
+   - /tmp/Movies:/Movies
+  links:
+    - transmission
+#  restart: always
+
+transmission:
+  image: timhaak/transmission
+  ports:
+    - 8084:45555
+    - 9091:9091
+  volumes:
+    - /tmp/watch:/watch
+    - /tmp/downloads:/downloads
+    - /tmp/incomplete:/incomplete
+    - /tmp/config:/config
+  environment:
+    - USERNAME=transmission
+    - PASSWORD=transmission
+#  restart: always
