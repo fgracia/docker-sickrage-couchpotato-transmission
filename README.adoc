@@ -1,0 +1,74 @@
+= Download industrialisé de séries et de films
+:toc:
+:sectnums:
+:author: Frédéric GRACIA
+:email: gracia.frederic@gmail.com
+
+== Synopsis
+
+Le fichier docker-compose lance la stack suivante :
+
+* SickRage : téléchargement automatique de séries et déplacement post-téléchargement dans le dossier de votre choix
+* CouchPotato : idem mais pour les films
+* Transmission : client de téléchargement très léger, linké aux 2 containers précédents
+
+Des fichiers de configuration par défaut sont fournis pour SickRage et CouchPotato.
+
+== Modifications à effectuer dans le fichier docker-compose.yml
+
+Décommenter au besoin les lignes suivantes pour chaque container :
+
+[source, yaml]
+----
+#  restart: always
+----
+
+Ensuite, pour chaque container :
+
+=== SickRage
+
+Adapter les volumes suivants :
+
+[source, yaml]
+----
+# Sous-dossier "conf", qui contiendra les fichiers externalisés
+- /home/fgracia/Documents/Docker/all-in-one/conf/sickrage:/data
+# Dossier dans lequel seront téléchargées les séries
+- /tmp/downloads/sickrage:/downloads/sickrage
+# Dossier final où sont les séries sur votre mediacenter
+- /tmp/Series:/Series
+----
+
+=== CouchPotato
+
+Adapter les volumes suivants :
+
+[source, yaml]
+----
+# Sous-dossier "conf", qui contiendra les fichiers externalisés
+- /home/fgracia/Documents/Docker/all-in-one/conf/couchpotato:/root/.couchpotato
+# Dossier dans lequel seront téléchargés les films
+- /tmp/downloads/couchpotato:/downloads/couchpotato
+# Dossier final où sont les films sur votre mediacenter
+- /tmp/Movies:/Movies
+----
+
+== Lancer
+
+[source, bash]
+----
+docker-compose up -d
+----
+
+== Se connecter
+
+* SickRage : http://<IP_host>:8081
+** Login / password : sickrage / sickrage
+* CouchPotato : http://<IP_host>:8082
+** Login / password : couchpotato / couchpotato
+* Transmission : http://<IP_host>:9091
+** Login / password : transmission / transmission
+
+NOTE: Le script *clean_external_files_except_config.sh* permet de repartir
+sur une configuration base de données vierge, tout en gardant les fichiers
+de configuration fournis par défaut dans le sous-dossier *conf*.
