@@ -3,7 +3,8 @@
 sudo rm -rf conf/couchpotato/cache \
 conf/couchpotato/database \
 conf/couchpotato/db_backup \
-conf/couchpotato/logs
+conf/couchpotato/logs \
+conf/couchpotato/custom_plugins
 
 sudo rm -rf conf/sickrage/cache \
 conf/sickrage/Logs \
