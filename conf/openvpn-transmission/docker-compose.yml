@@ -1,0 +1,49 @@
+openvpn-transmission:
+  image: haugene/transmission-openvpn:1.15
+  environment:
+    - "OPENVPN_PROVIDER=FROOT"
+    - "OPENVPN_CONFIG=FROOTVPN"
+    - "OPENVPN_USERNAME=<login>"
+    - "OPENVPN_PASSWORD=<password>"
+    - "OPENVPN_OPTS=--inactive 3600 --ping 10 --ping-exit 60"
+    - "TRANSMISSION_DOWNLOAD_QUEUE_SIZED_DIR=/data"
+    - "TRANSMISSION_SPEED_LIMIT_DOWN_ENABLED=true"
+    - "TRANSMISSION_SPEED_LIMIT_DOWN=6000"
+    - "TRANSMISSION_SPEED_LIMIT_UP_ENABLED=true"
+    - "TRANSMISSION_SPEED_LIMIT_UP=150"
+    - "TRANSMISSION_WATCH_DIR_ENABLED=true"
+    - "TRANSMISSION_WATCH_DIR=/data/watch"
+    - "TRANSMISSION_IDLE_SEEDING_LIMIT_ENABLED=true"
+    - "TRANSMISSION_PORT_FORWARDING_ENABLED=true"
+    - "TRANSMISSION_RPC_AUTHENTICATION_REQUIRED=true"
+    - "TRANSMISSION_RPC_USERNAME=<login>"
+    - "TRANSMISSION_RPC_PASSWORD=<password>"
+    - "TRANSMISSION_AUTH_USERNAME=<login>"
+    - "TRANSMISSION_AUTH_PASSWORD=<password>"
+    - "TRANSMISSION_ALT_SPEED_ENABLED=true"
+    - "TRANSMISSION_ALT_SPEED_DOWN=1"
+    - "TRANSMISSION_ALT_SPEED_UP=1"
+    - "TRANSMISSION_ALT_SPEED_TIME_ENABLED=true"
+    - "TRANSMISSION_ALT_SPEED_TIME_BEGIN=1140"
+    - "TRANSMISSION_ALT_SPEED_TIME_END=120"
+    - "TRANSMISSION_ALT_SPEED_TIME_DAY=127"
+    - "TRANSMISSION_DOWNLOAD_QUEUE_SIZE=2"
+  ports:
+    - 9091
+    - 51413:51413
+    - 51413:51413/udp
+  volumes:
+    - /volume1/DL:/data
+    - /etc/localtime:/etc/localtime:ro
+  privileged: true
+  restart: always
+
+nginx:
+  image: nginx
+  links:
+    - openvpn-transmission
+  ports:
+    - 8083:8080
+  volumes:
+    - /volume1/Docker/build/openvpn-transmission/nginx.conf:/etc/nginx/nginx.conf:ro
+  restart: always
